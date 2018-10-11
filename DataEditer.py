@@ -1,5 +1,5 @@
 import string
-
+from gensim import corpora
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 
@@ -42,3 +42,9 @@ class DataEdit():
             for s in l:
                 s = s.replace("  ", " ")
         return l
+
+
+
+
+
+
