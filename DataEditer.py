@@ -1,3 +1,4 @@
+import pandas as pd
 import re
 import string
 
@@ -5,22 +6,12 @@ import inflect
 from gensim import corpora
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
+from string import digits
 
 
-def replace_numbers(words):
-    """Replace all interger occurrences in list of tokenized words with textual representation"""
-    p = inflect.engine()
-    new_words = []
-    for word in words:
-        if word.isdigit():
-            new_word = p.number_to_words(word)
-            new_words.append(new_word)
-        else:
-            new_words.append(word)
-    return new_words
-
-
-
+def readData():
+    rd = pd.read_csv('C:\\Users\\sachare\\Documents\\Github\\Cv2JobMLPython\\input\\resume_dataset.csv')
+    return rd
 class DataEdit():
     def stringRemoverAndStopword(l):
         r = []
@@ -30,7 +21,8 @@ class DataEdit():
                        'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2'
             , '3', '4', '5', '6', '7', '8', '9']
         table = str.maketrans({key: None for key in string.punctuation})
-        q = ""
+
+        remove_digits = str.maketrans('', '', digits)
         for s in l:
             s = re.sub(r'^https?:\/\/.*[\r\n]*', '', s, flags=re.MULTILINE)
             s = re.sub(r'^http?:\/\/.*[\r\n]*', '', s, flags=re.MULTILINE)
@@ -42,6 +34,8 @@ class DataEdit():
             s = s.replace('"', ' ')
             s = s.replace("page", " ")
             s = s.replace("resume", " ")
+            s = s.replace("  ", " ")
+            s = s.translate(remove_digits)
             for x in filter_list:
                 for y in filter_list:
                     s = s.replace("\\x" + x + y, "")
@@ -59,10 +53,8 @@ class DataEdit():
             for w in s.split(" "):
                 if w not in words:
                     q += w + " "
+            q = q.replace("  ", " ")
             l.append(q)
-            for s in l:
-                s = s.replace("  ", " ")
-        print(l)
         return l
 
 
