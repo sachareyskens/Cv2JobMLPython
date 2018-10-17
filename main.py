@@ -17,6 +17,9 @@ def main(argv):
             print('main.py -i <trainDataLocation> -p <PredictionString>')
             sys.exit(0)
         elif opt=='-t':
-            Classifier_sklearn.train()
+            Classifier_sklearn.run()
+            sys.exit()
+        elif opt=='-p':
+            Classifier_sklearn.predict()
             sys.exit()
 

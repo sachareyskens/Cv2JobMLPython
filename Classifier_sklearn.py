@@ -8,6 +8,7 @@ from sklearn.pipeline import Pipeline
 import DataEditer
 from DataEditer import DataEdit
 
+
 def run():
     X_train, X_test, Y_train, Y_test, labels = processData()
     model = buildPipeline(X_train, Y_train)
@@ -17,8 +18,8 @@ def run():
 def buildPipeline(X_train, Y_train):
     pipeline = Pipeline(
         [('vect', TfidfVectorizer(ngram_range=(1, 2), stop_words='english', sublinear_tf=True, min_df=1, use_idf=True)),
-         ('chi', SelectKBest(chi2, k=50000)),
-         ('clf', SGDClassifier(penalty='l1', learning_rate='optimal', eta0=0.1, verbose=1, n_iter=250, n_jobs=35))])
+         ('chi', SelectKBest(chi2, k=60000)),
+         ('clf', SGDClassifier(penalty='l1', learning_rate='optimal', eta0=0.1, verbose=1, n_iter=300, n_jobs=40))])
     model = pipeline.fit(X_train, Y_train)
     return model
 
