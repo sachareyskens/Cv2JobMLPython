@@ -8,10 +8,18 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from string import digits
 
+global inputFile
+def getInputFile():
+    return inputFile
+
+def setInputFile(inputFilee):
+    global inputFile
+    inputFile = inputFilee
 
 def readData():
-    rd = pd.read_csv('C:\\Users\\sachare\\Documents\\Github\\Cv2JobMLPython\\input\\resume_dataset.csv')
+    rd = pd.read_csv(inputFile)
     return rd
+
 class DataEdit():
     def stringRemoverAndStopword(l):
         r = []

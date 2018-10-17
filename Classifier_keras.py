@@ -13,7 +13,7 @@ import DataEditer
 from DataEditer import DataEdit
 
 
-
+DataEditer.setInputFile('C:\\Users\\sachare\\Documents\\Github\\Cv2JobMLPython\\input\\resume_dataset.csv')
 data = DataEditer.readData()
 resumes = data["Resume"].values
 labels = data["Category"].values
@@ -50,14 +50,12 @@ vocab_size = 10000
 model = keras.Sequential()
 model.add(keras.layers.Embedding(1350, 25))
 model.add(keras.layers.GlobalAveragePooling1D())
-model.add(keras.layers.Dense(40, activation=tf.nn.relu))
-model.add(keras.layers.Dense(20, activation=tf.nn.relu))
-model.add(keras.layers.Dropout(0.3))
+model.add(keras.layers.Dense(800, activation=tf.nn.relu))
 model.add(keras.layers.Dense(25, activation=tf.nn.sigmoid))
 
 model.summary()
 
-model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.005),
+model.compile(optimizer=tf.train.AdamOptimizer(),
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
@@ -67,8 +65,8 @@ y_val = labels_train[:100]
 partial_y_train = labels_train[100:]
 history = model.fit(partial_x_train,
                     partial_y_train,
-                    epochs=20,
-                    batch_size=50,
+                    epochs=100,
+                    batch_size=5,
                     validation_data=(x_val, y_val),
                     verbose=1)
 
