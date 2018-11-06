@@ -25,7 +25,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(resumes, labels, test_size=0
 vectorizer = TfidfVectorizer(ngram_range=(1,2), stop_words='english', sublinear_tf=True, min_df=1, use_idf=True)
 x = vectorizer.fit_transform(X_train, Y_train)
 y = vectorizer.fit_transform(X_test, Y_test)
-predict_vector = vectorizer.fit_transform({'Steve Pomeroy\nResume\nEducation\nFall 2000\xe2\x80\x93Fall\n2005\n\nBachelor of Science, Rochester Institute of Technology, Rochester, NY.\nReceived a Bachelors of Science in Computer Science from the Rochester Institute of\nTechnology. Concentrated in computer security, computer language construction, Japanese\nand psychology.\n\nExperience\nApril 2013\xe2\x80\x93 Senior Software Engineer, LevelUp.\npresent Developed Android application software, focusing on SDK design and development.\n2007\xe2\x80\x932013\n\nSystems Designer & Lead Mobile Developer, MIT Mobile Experience Lab.\nLead the development of and participated in the design of numerous projects. Functioned\nas lead developer for most of their implementations. Duties in projects mostly centered\naround Android app development, but also'})
+predict_vector = vectorizer.fit_transform({'arts'})
 
 unique_labels = set(labels)
 
@@ -50,12 +50,12 @@ vocab_size = 10000
 model = keras.Sequential()
 model.add(keras.layers.Embedding(1350, 25))
 model.add(keras.layers.GlobalAveragePooling1D())
-model.add(keras.layers.Dense(800, activation=tf.nn.relu))
+model.add(keras.layers.Dense(100, activation=tf.nn.relu))
 model.add(keras.layers.Dense(25, activation=tf.nn.sigmoid))
 
 model.summary()
 
-model.compile(optimizer=tf.train.AdamOptimizer(),
+model.compile(optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.001),
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
@@ -66,7 +66,7 @@ partial_y_train = labels_train[100:]
 history = model.fit(partial_x_train,
                     partial_y_train,
                     epochs=100,
-                    batch_size=5,
+                    batch_size=1,
                     validation_data=(x_val, y_val),
                     verbose=1)
 
@@ -77,7 +77,6 @@ unique_labels = sorted(unique_labels)
 i = 0
 for x in range(0,3):
     predicts = model.predict_classes(predict_data)
-    print(unique_labels)
     print(unique_labels[predicts[0]])
 
 
