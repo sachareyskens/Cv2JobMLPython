@@ -16,10 +16,10 @@ def runPrediction(prediction, training):
     if model==None or training == True:
         X_train, X_test, Y_train, Y_test, labels = processData()
         model = buildPipeline(X_train, Y_train)
-        s = train(model, labels, X_test, Y_test)
+        accuracy = train(model, labels, X_test, Y_test)
         if training==True:
-            s = "The accuracy equals : " + s + "%"
-            return s
+            accuracy = "The accuracy equals : " + accuracy + "%"
+            return accuracy
     return predict(model, [prediction])
 
 
@@ -43,12 +43,13 @@ def processData():
     resumes = data["Resume"].values
     labels = data["Category"].values
     resumes = DataEdit.stringRemoverAndStopword(resumes)
-    resumes = DataEdit.stemAndStopText(resumes)
+    resumes = DataEdit.stemAndStopRemover(resumes)
     X_train, X_test, Y_train, Y_test = train_test_split(resumes, labels, test_size=0.2)
     return X_train, X_test, Y_train, Y_test, labels
 
 def predict(model, toPredict):
-    s = model.predict(toPredict)
-    return s
+    prediction = model.predict(toPredict)
+    return prediction
 
-
+def addtraindata(trainingObjects):
+    return 0

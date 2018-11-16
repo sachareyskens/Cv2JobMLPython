@@ -1,6 +1,10 @@
-from flask import Flask
-
+from flask import Flask, request, abort, jsonify
+import json
 import Classifier_sklearn
+
+
+
+
 
 app = Flask(__name__)
 
@@ -19,4 +23,11 @@ def get_train_accuracy():
     print(s)
     return s
 
+@app.route('/scikit/api/trainingset', methods=['POST'])
+def add_training_data():
+    arrayOfTrainings = request.get_json()
+    print((arrayOfTrainings))
+    return "success"
+
 app.run(debug=True)
+

@@ -1,12 +1,9 @@
-import pandas as pd
 import re
 import string
-
-import inflect
-from gensim import corpora
-from nltk.corpus import stopwords
-from nltk.stem import SnowballStemmer
 from string import digits
+
+import pandas as pd
+from nltk.corpus import stopwords
 
 global inputFile
 def getInputFile():
@@ -21,8 +18,8 @@ def readData():
     return rd
 
 class DataEdit():
-    def stringRemoverAndStopword(l):
-        r = []
+    def stringRemoverAndStopword(string_list):
+        cleaned_string_list = []
 
         filter_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
                        't',
@@ -31,38 +28,37 @@ class DataEdit():
         table = str.maketrans({key: None for key in string.punctuation})
 
         remove_digits = str.maketrans('', '', digits)
-        for s in l:
-            s = re.sub(r'^https?:\/\/.*[\r\n]*', '', s, flags=re.MULTILINE)
-            s = re.sub(r'^http?:\/\/.*[\r\n]*', '', s, flags=re.MULTILINE)
-            s = s.lower()
-            s = s.replace("\\n", " ")
-            s = s.replace("b'", " ")
-            s = s.replace("'", " ")
-            s = s.replace('b"', ' ')
-            s = s.replace('"', ' ')
-            s = s.replace("page", " ")
-            s = s.replace("resume", " ")
-            s = s.replace("  ", " ")
-            s = s.translate(remove_digits)
+        for line in string_list:
+            line = re.sub(r'^https?:\/\/.*[\r\n]*', '', line, flags=re.MULTILINE)
+            line = re.sub(r'^http?:\/\/.*[\r\n]*', '', line, flags=re.MULTILINE)
+            line = line.lower()
+            line = line.replace("\\n", " ")
+            line = line.replace("b'", " ")
+            line = line.replace("'", " ")
+            line = line.replace('b"', ' ')
+            line = line.replace('"', ' ')
+            line = line.replace('\\uf0b7', '')
+            line = line.replace("page", " ")
+            line = line.replace("resume", " ")
+            line = line.replace("  ", " ")
+            line = line.translate(remove_digits)
             for x in filter_list:
                 for y in filter_list:
-                    s = s.replace("\\x" + x + y, "")
-            s = s.translate(table)
-            r.append(s.lower())
-        return r
+                    line = line.replace("\\x" + x + y, "")
+            line = line.translate(table)
+            cleaned_string_list.append(line.lower())
+        return cleaned_string_list
 
-    def stemAndStopText(r):
-        stemmer = SnowballStemmer('english')
+    def stemAndStopRemover(string_list):
         words = stopwords.words('english')
         l = []
-        for s in r:
-            q = ""
-
-            for w in s.split(" "):
-                if w not in words:
-                    q += w + " "
-            q = q.replace("  ", " ")
-            l.append(q)
+        for line in string_list:
+            cleaned = ""
+            for word in line.split(" "):
+                if word not in words:
+                    cleaned += word + " "
+            cleaned = cleaned.replace("  ", " ")
+            l.append(cleaned)
         return l
 
 
